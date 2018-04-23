@@ -14,6 +14,7 @@ public class DnsMessageEncoder {
             DnsMessageHeader header = message.getHeader();
             out.writeShort(header.getRequestId());
 
+            // FIXME: this needs to write out the bits rather than hard coding a standard query
             out.writeShort(0x8100);
             out.writeShort(header.getQuestionCount());
             out.writeShort(header.getAnswerCount());
