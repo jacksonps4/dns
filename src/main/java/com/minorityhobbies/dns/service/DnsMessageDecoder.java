@@ -2,9 +2,9 @@ package com.minorityhobbies.dns.service;
 
 import com.minorityhobbies.dns.api.*;
 
-import java.io.*;
-import java.net.URLEncoder;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 public class DnsMessageDecoder {
     public DnsMessage decodeMessage(byte[] message) {
@@ -56,8 +56,8 @@ public class DnsMessageDecoder {
     DnsQuestion readDnsQuestion(DataInputStream in) throws IOException {
         DnsQuestion q = new DnsQuestion();
         q.setName(readLabels(in, new byte[0]));
-        q.setQueryType(in.readUnsignedShort());
-        q.setQueryClass(DnsResourceType.fromType(in.readUnsignedShort()));
+        q.setQueryType(DnsResourceType.fromType(in.readUnsignedShort()));
+        q.setQueryClass(DnsQueryClass.fromCode(in.readUnsignedShort()));
         return q;
     }
 

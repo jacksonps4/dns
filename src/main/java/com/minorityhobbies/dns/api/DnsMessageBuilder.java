@@ -29,8 +29,8 @@ public class DnsMessageBuilder {
 
         DnsQuestion question = new DnsQuestion();
         question.setName(dnsName);
-        question.setQueryType((byte) 1);
-        question.setQueryClass(DnsResourceType.A);
+        question.setQueryType(DnsResourceType.valueOf(type.toUpperCase()));
+        question.setQueryClass(DnsQueryClass.IN);
         msg.setQuestion(Arrays.asList(question));
 
         return msg;
