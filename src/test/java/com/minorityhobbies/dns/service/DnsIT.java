@@ -27,7 +27,7 @@ public class DnsIT {
         byte[] v = Arrays.copyOfRange(r, rx.getOffset(), rx.getLength());
         System.out.println(pp.printHexDump(v));
         System.out.println(pp.prettyPrintBytes(v));
-        DnsMessageEncoder encoder = new DnsMessageEncoder();
+        DnsMessageDecoder encoder = new DnsMessageDecoder();
         DnsMessage msg = encoder.decodeMessage(v);
         assertNotNull(msg);
     }

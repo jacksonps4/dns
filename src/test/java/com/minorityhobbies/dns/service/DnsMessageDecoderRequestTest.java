@@ -8,14 +8,14 @@ import static com.minorityhobbies.dns.service.DnsTestData.DNS_QUERY;
 import static org.junit.Assert.*;
 
 public class DnsMessageDecoderRequestTest {
-    private DnsMessageEncoder encoder;
+    private DnsMessageDecoder encoder;
 
     private DnsMessage msg;
     private DnsMessageHeader header;
 
     @Before
     public void setUp() {
-        encoder = new DnsMessageEncoder();
+        encoder = new DnsMessageDecoder();
 
         msg = encoder.decodeMessage(DNS_QUERY);
         header = msg.getHeader();

@@ -4,23 +4,21 @@ import com.minorityhobbies.dns.api.DnsMessage;
 import com.minorityhobbies.dns.api.DnsMessageHeader;
 import com.minorityhobbies.dns.api.DnsOpCode;
 import com.minorityhobbies.dns.api.DnsResourceType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.minorityhobbies.dns.service.DnsTestData.DNS_ANSWER;
-import static com.minorityhobbies.dns.service.DnsTestData.DNS_QUERY;
 import static org.junit.Assert.*;
 
 public class DnsMessageDecoderAnswerTest {
-    private DnsMessageEncoder encoder;
+    private DnsMessageDecoder encoder;
 
     private DnsMessage msg;
     private DnsMessageHeader header;
 
     @Before
     public void setUp() {
-        encoder = new DnsMessageEncoder();
+        encoder = new DnsMessageDecoder();
 
         msg = encoder.decodeMessage(DNS_ANSWER);
         header = msg.getHeader();

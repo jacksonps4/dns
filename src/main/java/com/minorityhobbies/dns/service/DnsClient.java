@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 public class DnsClient {
     private final DnsMessageEncoder encoder = new DnsMessageEncoder();
+    private final DnsMessageDecoder decoder = new DnsMessageDecoder();
 
     private final InetSocketAddress server;
 
@@ -34,7 +35,7 @@ public class DnsClient {
             System.out.println(pp.printHexDump(v));
             System.out.println(pp.prettyPrintBytes(v));
 
-            return encoder.decodeMessage(v);
+            return decoder.decodeMessage(v);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
