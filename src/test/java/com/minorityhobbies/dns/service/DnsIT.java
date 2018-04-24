@@ -16,7 +16,7 @@ public class DnsIT {
     public void test() throws IOException {
         DatagramSocket socket = new DatagramSocket();
         DatagramPacket packet = new DatagramPacket(DnsTestData.DNS_QUERY, 0, DnsTestData.DNS_QUERY.length,
-                new InetSocketAddress("172.16.32.1", 53));
+                new InetSocketAddress("1.1.1.1", 53));
         socket.send(packet);
 
         byte[] r = new byte[1024];

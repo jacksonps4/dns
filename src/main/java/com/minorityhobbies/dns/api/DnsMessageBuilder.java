@@ -17,6 +17,7 @@ public class DnsMessageBuilder {
         DnsMessageHeader header = new DnsMessageHeader();
         header.setNumberOfEntries(1);
         header.setOpcode(DnsOpCode.STANDARD_QUERY);
+        header.setResponseCode(DnsResponseCode.NO_ERRORS);
         header.setQuery(true);
         header.setRecursionRequested(true);
         header.setRequestId(idSource.next());

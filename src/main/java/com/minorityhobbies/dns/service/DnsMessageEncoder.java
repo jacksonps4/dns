@@ -2,6 +2,7 @@ package com.minorityhobbies.dns.service;
 
 import com.minorityhobbies.dns.api.DnsMessage;
 import com.minorityhobbies.dns.api.DnsMessageHeader;
+import com.minorityhobbies.dns.api.DnsOpCode;
 import com.minorityhobbies.dns.api.DnsQuestion;
 
 import java.io.ByteArrayOutputStream;
@@ -18,8 +19,7 @@ public class DnsMessageEncoder {
             DnsMessageHeader header = message.getHeader();
             out.writeShort(header.getRequestId());
 
-            // FIXME: this needs to write out the bits rather than hard coding a standard query
-            out.writeShort(0x8100);
+            out.writeShort(encodeHeaderData(header));
             out.writeShort(header.getQuestionCount());
             out.writeShort(header.getAnswerCount());
             out.writeShort(header.getAuthorityCount());
@@ -31,6 +31,36 @@ public class DnsMessageEncoder {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    int encodeHeaderData(DnsMessageHeader header) {
+        int data = 0;
+        if (!header.isQuery()) {
+            data |= 0x8000;
+        }
+        DnsOpCode opCode = header.getOpcode();
+        switch (opCode) {
+            case INVERSE_QUERY:
+                data |= 0x800;
+                break;
+            case SERVER_STATUS_REQUEST:
+                data |= 0x1000;
+                break;
+        }
+        if (header.isAuthoritativeAnswer()) {
+            data |= 0x400;
+        }
+        if (header.isTruncated()) {
+            data |= 0x200;
+        }
+        if (header.isRecursionRequested()) {
+            data |= 0x100;
+        }
+        if (header.isRecursionAvailable()) {
+            data |= 0x80;
+        }
+        data |= header.getResponseCode().getCode();
+        return data;
     }
 
     byte[] encodeQuestions(List<DnsQuestion> questions) throws IOException {
