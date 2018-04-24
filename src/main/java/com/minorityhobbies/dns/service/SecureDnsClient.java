@@ -30,7 +30,8 @@ public class SecureDnsClient {
             for (int read; (read = in.read(b)) > -1; ) {
                 response.write(b, 0, read);
             }
-            return decoder.decodeMessage(response.toByteArray());
+            byte[] res = response.toByteArray();
+            return decoder.decodeMessage(res);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

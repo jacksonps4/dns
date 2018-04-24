@@ -7,25 +7,30 @@ import org.junit.Test;
 
 public class SecureDnsClientIT {
     @Test
-    public void lookup() {
+    public void lookupAddress() {
         SecureDnsClient client = new SecureDnsClient();
         DnsMessage request = new DnsMessageBuilder(
                 new RandomIdSource()).createQuestion("google.com", "A");
         long start = System.currentTimeMillis();
         DnsMessage response = client.sendMessage(request);
         long time = System.currentTimeMillis() - start;
-        for(DnsEntry entry : new DnsResourceRecordReader(response.getAnswers())) {
+        for(DnsEntry entry : new DnsResourceRecordReader(response.getAnswers(), response.message())) {
             System.out.println(entry);
             System.out.printf("%nQuery in %dms%n", time);
         }
+    }
 
-        long start2 = System.currentTimeMillis();
-        DnsMessage response2 = client.sendMessage(request);
-        long time2 = System.currentTimeMillis() - start2;
-        for(DnsEntry entry : new DnsResourceRecordReader(response.getAnswers())) {
+    @Test
+    public void lookupResponseWithCname() {
+        SecureDnsClient client = new SecureDnsClient();
+        DnsMessage request = new DnsMessageBuilder(
+                new RandomIdSource()).createQuestion("news.bbc.co.uk", "A");
+        long start = System.currentTimeMillis();
+        DnsMessage response = client.sendMessage(request);
+        long time = System.currentTimeMillis() - start;
+        for (DnsEntry entry : new DnsResourceRecordReader(response.getAnswers(), response.message())) {
             System.out.println(entry);
-            System.out.printf("%nQuery 2 in %dms%n", time);
+            System.out.printf("%nQuery in %dms%n", time);
         }
-
     }
 }

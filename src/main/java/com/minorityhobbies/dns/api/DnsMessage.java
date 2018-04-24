@@ -4,13 +4,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DnsMessage {
+    private transient final byte[] msg;
     private DnsMessageHeader header;
     private List<DnsQuestion> question = new LinkedList<>();
     private List<DnsResourceRecord> answers = new LinkedList<>();
     private List<DnsResourceRecord> authorities = new LinkedList<>();
     private List<DnsResourceRecord> additional = new LinkedList<>();
 
-    public DnsMessage() {}
+    public DnsMessage() {
+        this.msg = new byte[0];
+    }
+
+    public DnsMessage(byte[] msg) {
+        this.msg = msg;
+    }
+
+    public byte[] message() {
+        return msg;
+    }
 
     public DnsMessageHeader getHeader() {
         return header;

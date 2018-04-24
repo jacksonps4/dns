@@ -11,7 +11,7 @@ public class DnsMessageDecoder {
         ByteArrayInputStream bin = new ByteArrayInputStream(message);
         DataInputStream in = new DataInputStream(bin);
 
-        DnsMessage response = new DnsMessage();
+        DnsMessage response = new DnsMessage(message);
         DnsMessageHeader header = new DnsMessageHeader();
         response.setHeader(header);
 
@@ -86,16 +86,20 @@ public class DnsMessageDecoder {
 
     String readLabels(DataInputStream in, byte[] msg) throws IOException {
         StringBuilder dnsName = new StringBuilder();
+        return readLabels(in, msg, dnsName);
+    }
+
+    String readLabels(DataInputStream in, byte[] msg, StringBuilder dnsName) throws IOException {
         for (int len, count = 0; (len = in.readUnsignedByte()) > 0; count++) {
+            if (count > 0) {
+                dnsName.append(".");
+            }
             int addr = (len & 0x3f);
             if (addr == 0) {
                 // pointer to label: jump to offset
                 addr = in.readUnsignedByte();
                 DataInputStream ptrIn = new DataInputStream(new ByteArrayInputStream(msg, addr, msg.length - addr));
-                return readLabels(ptrIn, msg);
-            }
-            if (count > 0) {
-                dnsName.append(".");
+                return readLabels(ptrIn, msg, dnsName);
             }
             byte[] data = new byte[len];
             in.readFully(data);

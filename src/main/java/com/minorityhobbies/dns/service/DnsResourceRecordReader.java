@@ -4,23 +4,21 @@ import com.minorityhobbies.dns.api.DnsEntry;
 import com.minorityhobbies.dns.api.DnsResourceRecord;
 import com.minorityhobbies.dns.api.DnsResourceType;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class DnsResourceRecordReader implements Iterable<DnsEntry> {
     private final List<DnsResourceRecord> resourceRecords;
+    private final byte[] msg;
 
-    public DnsResourceRecordReader(Iterable<DnsResourceRecord> records) {
+    public DnsResourceRecordReader(Iterable<DnsResourceRecord> records, byte[] msg) {
         this.resourceRecords = new LinkedList<>();
         records.forEach(resourceRecords::add);
-    }
-
-    public DnsResourceRecordReader(DnsResourceRecord... records) {
-        this.resourceRecords = new LinkedList<>();
-        for (DnsResourceRecord record : records) {
-            resourceRecords.add(record);
-        }
+        this.msg = msg;
     }
 
     @Override
@@ -42,7 +40,7 @@ public class DnsResourceRecordReader implements Iterable<DnsEntry> {
 
     private String formatData(DnsResourceType type, byte[] data) {
         switch (type) {
-            case A:
+            case A: {
                 StringBuilder address = new StringBuilder();
                 for (int i = 0; i < data.length; i++) {
                     byte b = data[i];
@@ -53,10 +51,17 @@ public class DnsResourceRecordReader implements Iterable<DnsEntry> {
                     address.append(octet);
                 }
                 return address.toString();
-            case CNAME:
+            }
+            case CNAME: {
+                try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(data))) {
+                    return new DnsMessageDecoder().readLabels(in, msg);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            default: {
                 break;
-            default:
-                break;
+            }
         }
         return null;
     }
