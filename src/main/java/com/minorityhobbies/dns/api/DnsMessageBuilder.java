@@ -17,6 +17,7 @@ public class DnsMessageBuilder {
         DnsMessageHeader header = new DnsMessageHeader();
         header.setNumberOfEntries(1);
         header.setOpcode(DnsOpCode.STANDARD_QUERY);
+        header.setResponseCode(DnsResponseCode.NO_ERRORS);
         header.setQuery(true);
         header.setRecursionRequested(true);
         header.setRequestId(idSource.next());
@@ -29,8 +30,8 @@ public class DnsMessageBuilder {
 
         DnsQuestion question = new DnsQuestion();
         question.setName(dnsName);
-        question.setQueryType((byte) 1);
-        question.setQueryClass(DnsResourceType.A);
+        question.setQueryType(DnsResourceType.valueOf(type.toUpperCase()));
+        question.setQueryClass(DnsQueryClass.IN);
         msg.setQuestion(Arrays.asList(question));
 
         return msg;

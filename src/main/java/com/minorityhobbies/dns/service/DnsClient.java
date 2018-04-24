@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 public class DnsClient {
     private final DnsMessageEncoder encoder = new DnsMessageEncoder();
+    private final DnsMessageDecoder decoder = new DnsMessageDecoder();
 
     private final InetSocketAddress server;
 
@@ -27,6 +28,8 @@ public class DnsClient {
             // FIXME: needs a bigger buffer?
             byte[] r = new byte[1024];
             DatagramPacket dnsResponse = new DatagramPacket(r, 0, r.length);
+
+            // FIXME: need to check response correlationId
             socket.receive(dnsResponse);
 
             ByteArrayPrettyPrinter pp = new ByteArrayPrettyPrinter();
@@ -34,7 +37,7 @@ public class DnsClient {
             System.out.println(pp.printHexDump(v));
             System.out.println(pp.prettyPrintBytes(v));
 
-            return encoder.decodeMessage(v);
+            return decoder.decodeMessage(v);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

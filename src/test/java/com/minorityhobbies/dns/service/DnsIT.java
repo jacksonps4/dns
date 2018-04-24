@@ -16,7 +16,7 @@ public class DnsIT {
     public void test() throws IOException {
         DatagramSocket socket = new DatagramSocket();
         DatagramPacket packet = new DatagramPacket(DnsTestData.DNS_QUERY, 0, DnsTestData.DNS_QUERY.length,
-                new InetSocketAddress("172.16.32.1", 53));
+                new InetSocketAddress("1.1.1.1", 53));
         socket.send(packet);
 
         byte[] r = new byte[1024];
@@ -27,7 +27,7 @@ public class DnsIT {
         byte[] v = Arrays.copyOfRange(r, rx.getOffset(), rx.getLength());
         System.out.println(pp.printHexDump(v));
         System.out.println(pp.prettyPrintBytes(v));
-        DnsMessageEncoder encoder = new DnsMessageEncoder();
+        DnsMessageDecoder encoder = new DnsMessageDecoder();
         DnsMessage msg = encoder.decodeMessage(v);
         assertNotNull(msg);
     }

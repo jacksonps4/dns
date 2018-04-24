@@ -2,8 +2,8 @@ package com.minorityhobbies.dns.api;
 
 public class DnsQuestion {
     private String name;
-    private int queryType;
-    private DnsResourceType queryClass;
+    private DnsResourceType queryType;
+    private DnsQueryClass queryClass;
 
     public String getName() {
         return name;
@@ -13,19 +13,19 @@ public class DnsQuestion {
         this.name = name;
     }
 
-    public int getQueryType() {
+    public DnsResourceType getQueryType() {
         return queryType;
     }
 
-    public void setQueryType(int queryType) {
+    public void setQueryType(DnsResourceType queryType) {
         this.queryType = queryType;
     }
 
-    public DnsResourceType getQueryClass() {
+    public DnsQueryClass getQueryClass() {
         return queryClass;
     }
 
-    public void setQueryClass(DnsResourceType queryClass) {
+    public void setQueryClass(DnsQueryClass queryClass) {
         this.queryClass = queryClass;
     }
 }
