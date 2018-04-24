@@ -32,10 +32,10 @@ public class DnsClient {
             // FIXME: need to check response correlationId
             socket.receive(dnsResponse);
 
-            ByteArrayPrettyPrinter pp = new ByteArrayPrettyPrinter();
+            //ByteArrayPrettyPrinter pp = new ByteArrayPrettyPrinter();
             byte[] v = Arrays.copyOfRange(r, dnsResponse.getOffset(), dnsResponse.getLength());
-            System.out.println(pp.printHexDump(v));
-            System.out.println(pp.prettyPrintBytes(v));
+            //System.out.println(pp.printHexDump(v));
+            //System.out.println(pp.prettyPrintBytes(v));
 
             return decoder.decodeMessage(v);
         } catch (IOException e) {
