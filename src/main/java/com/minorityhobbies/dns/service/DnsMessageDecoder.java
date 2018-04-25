@@ -71,8 +71,8 @@ public class DnsMessageDecoder {
 
         int b1 = in.readUnsignedShort();
         int b2 = in.readUnsignedShort();
-        // FIXME: inefficient?
-        int timeToLive = Integer.parseUnsignedInt(String.valueOf(b1).concat(String.valueOf(b2)), 10);
+
+        int timeToLive = (b1 << 16) | b2;
         a.setTtl(timeToLive);
 
         a.setLength(in.readUnsignedShort());
