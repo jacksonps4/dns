@@ -1,21 +1,24 @@
 package com.minorityhobbies.dns.service;
 
-import com.minorityhobbies.dns.api.DnsMessage;
-
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class SecureDnsClient {
-    private final DnsMessageEncoder encoder = new DnsMessageEncoder();
-    private final DnsMessageDecoder decoder = new DnsMessageDecoder();
+public class UdpSecureDnsProxy {
+    private final URL dnsUrl;
+    private final UdpServer udpServer;
 
-    public DnsMessage sendMessage(DnsMessage req) {
-        byte[] dnsRequest = encoder.encodeMessage(req);
+    public UdpSecureDnsProxy(int port, String url) throws IOException  {
+        this.dnsUrl = new URL(url);
+        this.udpServer = new UdpServer(port, this::processRequest);
+        this.udpServer.start();
+    }
+
+    private byte[] processRequest(byte[] dnsRequest) {
         try {
-            URL dnsUrl = new URL("https://cloudflare-dns.com/dns-query");
             URLConnection connection = dnsUrl.openConnection();
             connection.setRequestProperty("Accept", "application/dns-udpwireformat");
             connection.setRequestProperty("Content-Type", "application/dns-udpwireformat");
@@ -31,10 +34,13 @@ public class SecureDnsClient {
             for (int read; (read = in.read(b)) > -1; ) {
                 response.write(b, 0, read);
             }
-            byte[] res = response.toByteArray();
-            return decoder.decodeMessage(res);
+            return response.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        new UdpSecureDnsProxy(Integer.getInteger("port"), "https://cloudflare-dns.com/dns-query");
     }
 }
