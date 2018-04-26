@@ -17,7 +17,7 @@ public class RandomIdSourceTest {
     public void oneMillionItems() {
         for (int i = 0; i < 1_000_000; i++) {
             int value = idSource.next();
-            if (value > 65535) {
+            if (value < 0 || value > 65535) {
                 fail("Invalid value " + value);
             }
         }

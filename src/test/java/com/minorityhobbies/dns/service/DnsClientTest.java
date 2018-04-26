@@ -6,21 +6,26 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
+import java.net.SocketException;
+import java.util.concurrent.TimeoutException;
 
-@Ignore
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 public class DnsClientTest {
     private DnsClient client;
 
     @Before
-    public void init() {
-        client = new DnsClient("172.16.32.1", 53);
+    public void init() throws SocketException  {
+        client = new DnsClient("8.8.8.8", 53);
     }
 
     @Test
-    public void test() {
+    public void test() throws TimeoutException  {
         DnsMessage response = client.sendMessage(new DnsMessageBuilder(
                 new RandomIdSource()).createQuestion("google.com", "A"));
         assertNotNull(response);
+        assertThat(response.getAnswers().size(), equalTo(1));
     }
 }

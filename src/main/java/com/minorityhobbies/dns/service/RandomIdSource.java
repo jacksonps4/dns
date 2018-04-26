@@ -6,7 +6,7 @@ import java.util.PrimitiveIterator;
 public class RandomIdSource implements IdSource {
     private static final int MAX = 65535;
 
-    private PrimitiveIterator.OfLong values;
+    private PrimitiveIterator.OfInt values;
 
     public RandomIdSource() {
         init();
@@ -14,19 +14,16 @@ public class RandomIdSource implements IdSource {
 
     void init() {
         values = new SecureRandom()
-                .ints()
-                .asLongStream()
-                .filter(l -> l < MAX)
-                .distinct()
+                .ints(0, MAX)
                 .iterator();
     }
 
-    public short next() {
-        Long value = values.next();
+    public int next() {
+        Integer value = values.next();
         if (value == null) {
             init();
             value = values.next();
         }
-        return value.shortValue();
+        return value.intValue();
     }
 }

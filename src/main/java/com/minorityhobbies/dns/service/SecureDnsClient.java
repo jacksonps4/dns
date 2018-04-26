@@ -26,7 +26,7 @@ public class SecureDnsClient {
             out.write(dnsRequest);
 
             InputStream in = connection.getInputStream();
-            byte[] b = new byte[1024];
+            byte[] b = new byte[1536];
             ByteArrayOutputStream response = new ByteArrayOutputStream();
             for (int read; (read = in.read(b)) > -1; ) {
                 response.write(b, 0, read);
