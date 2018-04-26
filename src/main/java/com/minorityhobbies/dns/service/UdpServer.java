@@ -15,7 +15,7 @@ public class UdpServer implements AutoCloseable {
     private final DatagramSocket socket;
     private final Function<byte[], byte[]> processor;
 
-    public UdpServer(int port, Function<byte[], byte[]> processor) throws IOException  {
+    public UdpServer(int port, Function<byte[], byte[]> processor) throws IOException {
         socket = new DatagramSocket(port);
         this.processor = processor;
         start();
@@ -38,6 +38,7 @@ public class UdpServer implements AutoCloseable {
                         logger.severe(() -> "Failed to send response: ".concat(e.getMessage()));
                     }
                 });
+                Arrays.fill(b, (byte) 0);
             } catch (IOException e) {
                 logger.severe(() -> e.getMessage());
             }
@@ -45,7 +46,7 @@ public class UdpServer implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (socket != null) {
             socket.close();
         }
