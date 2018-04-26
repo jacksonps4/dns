@@ -5,17 +5,26 @@ import com.minorityhobbies.dns.api.DnsMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class SecureDnsClient {
+    private final URL dnsUrl;
     private final DnsMessageEncoder encoder = new DnsMessageEncoder();
     private final DnsMessageDecoder decoder = new DnsMessageDecoder();
+
+    public SecureDnsClient(String dnsUrl) {
+        try {
+            this.dnsUrl = new URL(dnsUrl);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public DnsMessage sendMessage(DnsMessage req) {
         byte[] dnsRequest = encoder.encodeMessage(req);
         try {
-            URL dnsUrl = new URL("https://cloudflare-dns.com/dns-query");
             URLConnection connection = dnsUrl.openConnection();
             connection.setRequestProperty("Accept", "application/dns-udpwireformat");
             connection.setRequestProperty("Content-Type", "application/dns-udpwireformat");

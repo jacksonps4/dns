@@ -8,7 +8,7 @@ import org.junit.Test;
 public class SecureDnsClientIT {
     @Test
     public void lookupAddress() {
-        SecureDnsClient client = new SecureDnsClient();
+        SecureDnsClient client = new SecureDnsClient("https://cloudflare-dns.com/dns-query");
         DnsMessage request = new DnsMessageBuilder(
                 new RandomIdSource()).createQuestion("google.com", "A");
         long start = System.currentTimeMillis();
@@ -22,7 +22,7 @@ public class SecureDnsClientIT {
 
     @Test
     public void lookupResponseWithCname() {
-        SecureDnsClient client = new SecureDnsClient();
+        SecureDnsClient client = new SecureDnsClient("https://cloudflare-dns.com/dns-query");
         DnsMessage request = new DnsMessageBuilder(
                 new RandomIdSource()).createQuestion("news.bbc.co.uk", "A");
         long start = System.currentTimeMillis();
