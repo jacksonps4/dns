@@ -73,7 +73,7 @@ public class DnsMessageDecoderRequestAdditionalTest {
 
     @Test
     public void requestId() {
-        assertEquals(0x3141, header.getRequestId());
+        assertEquals(0x3741, header.getRequestId());
     }
 
     @Test
