@@ -1,7 +1,6 @@
 package com.minorityhobbies.dns.service;
 
 import com.minorityhobbies.dns.api.DnsMessage;
-import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.net.*;
@@ -26,8 +25,8 @@ public class DnsClient {
         final ZonedDateTime time;
         final SocketAddress addr;
 
-        public DnsRequestEntry(@NotNull int id, @NotNull ZonedDateTime time,
-                               @NotNull SocketAddress addr) {
+        public DnsRequestEntry(int id, ZonedDateTime time,
+                               SocketAddress addr) {
             this.id = id;
             this.time = time;
             this.addr = addr;

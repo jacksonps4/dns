@@ -11,7 +11,13 @@ public class UdpSecureDnsProxy implements AutoCloseable {
     private final URL dnsUrl;
     private final UdpServer udpServer;
 
-    public UdpSecureDnsProxy(int port, String url) throws IOException  {
+    public UdpSecureDnsProxy(String bindAddress, int port, String url) throws IOException {
+        this.dnsUrl = new URL(url);
+        this.udpServer = new UdpServer(bindAddress, port, this::processRequest);
+        this.udpServer.start();
+    }
+
+    public UdpSecureDnsProxy(int port, String url) throws IOException {
         this.dnsUrl = new URL(url);
         this.udpServer = new UdpServer(port, this::processRequest);
         this.udpServer.start();
@@ -51,6 +57,12 @@ public class UdpSecureDnsProxy implements AutoCloseable {
     }
 
     public static void main(String[] args) throws IOException {
-        new UdpSecureDnsProxy(Integer.getInteger("port"), "https://cloudflare-dns.com/dns-query");
+        String bindAddress = System.getProperty("bindAddress");
+        if (bindAddress != null) {
+            new UdpSecureDnsProxy(bindAddress, Integer.getInteger("port"),
+                    "https://cloudflare-dns.com/dns-query");
+        } else {
+            new UdpSecureDnsProxy(Integer.getInteger("port"), "https://cloudflare-dns.com/dns-query");
+        }
     }
 }

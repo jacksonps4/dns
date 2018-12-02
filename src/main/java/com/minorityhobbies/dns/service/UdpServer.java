@@ -3,6 +3,7 @@ package com.minorityhobbies.dns.service;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +17,11 @@ public class UdpServer implements AutoCloseable {
     private final Function<byte[], byte[]> processor;
 
     public UdpServer(int port, Function<byte[], byte[]> processor) throws IOException {
-        socket = new DatagramSocket(port);
+        this("0.0.0.0", port, processor);
+    }
+
+    public UdpServer(String address, int port, Function<byte[], byte[]> processor) throws IOException {
+        socket = new DatagramSocket(new InetSocketAddress(address, port));
         this.processor = processor;
         start();
     }

@@ -4,7 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.minorityhobbies.dns</groupId>
+    <parent>
+        <groupId>com.minorityhobbies</groupId>
+        <artifactId>indigenously.net.pom</artifactId>
+        <version>1.1</version>
+    </parent>
+
     <artifactId>dns</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -32,6 +37,18 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.minorityhobbies.dns.service.UdpSecureDnsProxy</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
