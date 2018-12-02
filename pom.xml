@@ -51,7 +51,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/jacksonps4/${project.artifactId}.git</connection>
-        <developerConnection>git@github.com:jacksonps4/${project.artifactId}.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:jacksonps4/${project.artifactId}.git</developerConnection>
         <url>https://github.com/jacksonps4/${project.artifactId}</url>
         <tag>HEAD</tag>
     </scm>
