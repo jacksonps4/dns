@@ -1,9 +1,5 @@
 package com.minorityhobbies.dns.service;
 
-import org.apache.commons.io.HexDump;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.BitSet;
 
 public class ByteArrayPrettyPrinter {
@@ -17,15 +13,5 @@ public class ByteArrayPrettyPrinter {
             }
         }
         return s.toString();
-    }
-
-    public String printHexDump(byte[] b) {
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            HexDump.dump(b, 0, out, 0);
-            return new String(out.toByteArray());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

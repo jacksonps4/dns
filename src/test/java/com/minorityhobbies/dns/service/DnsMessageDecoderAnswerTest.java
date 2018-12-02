@@ -93,7 +93,7 @@ public class DnsMessageDecoderAnswerTest {
 
     @Test
     public void answer() {
-        System.out.println(new ByteArrayPrettyPrinter().printHexDump(DNS_ANSWER));
+        //System.out.println(new ByteArrayPrettyPrinter().printHexDump(DNS_ANSWER));
 
         assertArrayEquals(new byte[] {(byte) 155, 33, 17, 68}, this.msg.getAnswers().get(0).getData());
     }

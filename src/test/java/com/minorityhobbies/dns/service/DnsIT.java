@@ -25,7 +25,7 @@ public class DnsIT {
 
         ByteArrayPrettyPrinter pp = new ByteArrayPrettyPrinter();
         byte[] v = Arrays.copyOfRange(r, rx.getOffset(), rx.getLength());
-        System.out.println(pp.printHexDump(v));
+        //System.out.println(pp.printHexDump(v));
         System.out.println(pp.prettyPrintBytes(v));
         DnsMessageDecoder encoder = new DnsMessageDecoder();
         DnsMessage msg = encoder.decodeMessage(v);

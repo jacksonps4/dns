@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class UdpSecureDnsProxy {
+public class UdpSecureDnsProxy implements AutoCloseable {
     private final URL dnsUrl;
     private final UdpServer udpServer;
 
@@ -17,12 +17,21 @@ public class UdpSecureDnsProxy {
         this.udpServer.start();
     }
 
+    public void close() {
+        if (udpServer != null) {
+            udpServer.close();
+        }
+    }
+
     private byte[] processRequest(byte[] dnsRequest) {
         try {
             URLConnection connection = dnsUrl.openConnection();
             connection.setRequestProperty("Accept", "application/dns-udpwireformat");
             connection.setRequestProperty("Content-Type", "application/dns-udpwireformat");
             connection.setRequestProperty("Content-Length", String.valueOf(dnsRequest.length));
+            connection.setRequestProperty("Cache-Control", "no-cache");
+            connection.setUseCaches(false);
+            connection.setDefaultUseCaches(false);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             OutputStream out = connection.getOutputStream();
@@ -34,7 +43,8 @@ public class UdpSecureDnsProxy {
             for (int read; (read = in.read(b)) > -1; ) {
                 response.write(b, 0, read);
             }
-            return response.toByteArray();
+            byte[] responseData = response.toByteArray();
+            return responseData;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

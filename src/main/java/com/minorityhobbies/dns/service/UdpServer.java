@@ -22,10 +22,10 @@ public class UdpServer implements AutoCloseable {
     }
 
     void start() {
-        byte[] b = new byte[1536];
-        DatagramPacket requestPacket = new DatagramPacket(b, 0, b.length);
         while (!Thread.currentThread().isInterrupted()) {
             try {
+                byte[] b = new byte[1536];
+                DatagramPacket requestPacket = new DatagramPacket(b, 0, b.length);
                 socket.receive(requestPacket);
                 byte[] request = Arrays.copyOfRange(b, requestPacket.getOffset(), requestPacket.getLength());
                 threads.submit(() -> {
