@@ -1,11 +1,13 @@
 package com.minorityhobbies.dns.service;
 
+import com.minorityhobbies.dns.api.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
+import java.util.Arrays;
 
 public class UdpSecureDnsProxy implements AutoCloseable {
     private final URL dnsUrl;
@@ -31,6 +33,31 @@ public class UdpSecureDnsProxy implements AutoCloseable {
 
     private byte[] processRequest(byte[] dnsRequest) {
         try {
+            DnsMessageDecoder decoder = new DnsMessageDecoder();
+            DnsMessage msg = decoder.decodeMessage(dnsRequest);
+
+            // deal with chicken-and-egg situation if being used as local DNS server
+            // by using 8.8.8.8 to resolve hostname for secure DNS server
+            if (msg.getQuestion().stream()
+                    .filter(q -> DnsResourceType.A.equals(q.getQueryType()))
+                    .filter(q -> dnsUrl.getHost().equals(q.getName()))
+                    .count() > 0) {
+                InetSocketAddress addr = new InetSocketAddress("8.8.8.8", 53);
+                DatagramSocket socket = new DatagramSocket();
+                DatagramPacket p = new DatagramPacket(dnsRequest, 0, dnsRequest.length, addr);
+                try {
+                    socket.send(p);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                byte[] b = new byte[1536];
+                DatagramPacket responsePacket = new DatagramPacket(b, 0, b.length);
+                socket.receive(responsePacket);
+                byte[] response = Arrays.copyOfRange(b, responsePacket.getOffset(), responsePacket.getLength());
+                return response;
+            }
+
             URLConnection connection = dnsUrl.openConnection();
             connection.setRequestProperty("Accept", "application/dns-udpwireformat");
             connection.setRequestProperty("Content-Type", "application/dns-udpwireformat");
